@@ -64,10 +64,10 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=pr
-            type=raw,value=${{ matrix.versions }}-${{ env.PGVECTORS_TAG }},enable=${{ steps.should-release.outputs.result }}
-            type=raw,value=${{ steps.version.outputs.PG_MAJOR }}-${{ env.PGVECTORS_TAG }},enable=${{ steps.should-release.outputs.result }}
-            type=raw,value=${{ matrix.versions }},enable=${{ steps.should-release.outputs.result }}
-            type=raw,value=${{ steps.version.outputs.PG_MAJOR }},enable=${{ steps.should-release.outputs.result }}
+            type=raw,value=${{ matrix.versions }}-${{ env.PGVECTORS_TAG }}
+            type=raw,value=${{ steps.version.outputs.PG_MAJOR }}-${{ env.PGVECTORS_TAG }}
+            type=raw,value=${{ matrix.versions }}
+            type=raw,value=${{ steps.version.outputs.PG_MAJOR }}
 
       - name: Build and push image
         uses: docker/build-push-action@v5
