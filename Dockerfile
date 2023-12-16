@@ -22,8 +22,8 @@ FROM registry.developers.crunchydata.com/crunchydata/crunchy-postgres:${CRUNCHYD
 
 ARG PG_MAJOR
 
-COPY --chown=root:root --chmod=755 --from=builder /tmp/usr/lib/postgresql/${PG_MAJOR}/lib/vectors.so /usr/lib/postgresql/${PG_MAJOR}/lib/
-COPY --chown=root:root --chmod=755 --from=builder /tmp/usr/share/postgresql/${PG_MAJOR}/extension/vectors*.sql /usr/share/postgresql/${PG_MAJOR}/extension/
+COPY --chown=root:root --chmod=755 --from=builder /tmp/usr/lib/postgresql/${PG_MAJOR}/lib/vectors.so /usr/pgsql-${PG_MAJOR}/lib/
+COPY --chown=root:root --chmod=755 --from=builder /tmp/usr/share/postgresql/${PG_MAJOR}/extension/vectors*.sql /usr/pgsql-${PG_MAJOR}/share/extension/
 
 # Default PostgreSQL User
 USER 26
