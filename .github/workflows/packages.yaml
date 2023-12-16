@@ -50,6 +50,11 @@ jobs:
           PG_MAJOR=$(echo ${{ matrix.versions }})
           echo "PG_MAJOR=$PG_MAJOR" >> "$GITHUB_OUTPUT"
 
+      - name: Extract PGVECTORS_TAG from Dockerfile
+        run: |
+          TAG=$(grep -oP 'ARG PGVECTORS_TAG=\K.*' Dockerfile)
+          echo "PGVECTORS_TAG=$TAG" >> $GITHUB_ENV
+
       - name: Generate docker image tags
         id: metadata
         uses: docker/metadata-action@v5
