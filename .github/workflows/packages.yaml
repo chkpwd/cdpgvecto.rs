@@ -43,7 +43,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        
+
+      - name: Determine version change
+        id: changed-version
+        uses: tj-actions/changed-files@v40
+        with:
+          files: Dockerfile
+
+      - name: Determine image push
+        uses: actions/github-script@v7
+        id: should-release
+        with:
+          script: |
+            if (context.eventName == "pull_request") return false;
+            return "${{ steps.changed-version.outputs.any_changed }}" == "true";
+
       - name: Set Postgres Version
         id: version
         run: |
@@ -64,10 +78,10 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=pr
-            type=raw,value=${{ matrix.versions }}-${{ env.PGVECTORS_TAG }}
-            type=raw,value=${{ steps.version.outputs.PG_MAJOR }}-${{ env.PGVECTORS_TAG }}
-            type=raw,value=${{ matrix.versions }}
-            type=raw,value=${{ steps.version.outputs.PG_MAJOR }}
+            type=raw,value=${{ matrix.versions }}-${{ env.PGVECTORS_TAG }},enable=${{ steps.should-release.outputs.result }}
+            type=raw,value=${{ steps.version.outputs.PG_MAJOR }}-${{ env.PGVECTORS_TAG }},enable=${{ steps.should-release.outputs.result }}
+            type=raw,value=${{ matrix.versions }},enable=${{ steps.should-release.outputs.result }}
+            type=raw,value=${{ steps.version.outputs.PG_MAJOR }},enable=${{ steps.should-release.outputs.result }}
 
       - name: Build and push image
         uses: docker/build-push-action@v5
