@@ -25,6 +25,7 @@ ARG PG_MAJOR
 COPY --chown=root:root --chmod=755 --from=builder /tmp/usr/lib/postgresql/${PG_MAJOR}/lib/vectors.so /usr/lib/postgresql/${PG_MAJOR}/lib/
 COPY --chown=root:root --chmod=755 --from=builder /tmp/usr/share/postgresql/${PG_MAJOR}/extension/vectors*.sql /usr/share/postgresql/${PG_MAJOR}/extension/
 
-USER postgres
+# Default PostgreSQL User
+USER 26
 
 COPY app/pgvectors.sql /docker-entrypoint-initdb.d/
