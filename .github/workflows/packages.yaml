@@ -1,32 +1,37 @@
-name: Build/Push Image
+name: Build Image and Push
 
 on:
   push:
     branches: [ 'main' ]
-    tags: [ '*' ]
-  release:
-    types: [published]
   pull_request:
-  workflow_dispatch:
-    inputs:
-      push:
-        description: 'Push image [true|false]'
-        required: false
-        default: 'false'
+    branches: [ 'main' ]
+  release:
+    types: [ published ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 # Sets permissions of the GITHUB_TOKEN
 permissions:
   packages: write
   contents: read
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/cdpgvecto.rs
-
 jobs:
-  build:
-    name: Build Multi-Arch Stack
+  postgres:
+    strategy:
+      matrix:
+        versions: [14, 15, 16]
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+  build:
+    runs-on: ubuntu-latest
+    needs: postgres
+    strategy:
+      fail-fast: false
+      matrix: ${{ matrix.versions }}
     steps:
       - uses: actions/checkout@v4
 
@@ -42,20 +47,36 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Set Postgres Version
+        id: version
+        run: |
+          PG_MAJOR=$(echo ${{ matrix.versions }})
+          echo "PG_MAJOR=$PG_MAJOR" >> "$GITHUB_OUTPUT"
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
+      - name: Generate docker image tags
+        id: metadata
         uses: docker/metadata-action@v5
         with:
+          flavor: |
+            latest=false
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=pr
+            type=raw,value=${{ matrix.versions }}-${{ env.PGVECTORS_TAG }},enable=${{ steps.should-release.outputs.result }}
+            type=raw,value=${{ steps.version.outputs.PG_MAJOR }}-${{ env.PGVECTORS_TAG }},enable=${{ steps.should-release.outputs.result }}
+            type=raw,value=${{ matrix.versions }},enable=${{ steps.should-release.outputs.result }}
+            type=raw,value=${{ steps.version.outputs.PG_MAJOR }},enable=${{ steps.should-release.outputs.result }}
 
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
-          push: ${{ github.event.inputs.push != 'false' }}
-          platforms: linux/amd64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          push: ${{ !github.event.pull_request.head.repo.fork && steps.metadata.outputs.tags != '' }}
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: false
+          build-args: |
+            PG_MAJOR=${{ matrix.versions }}
