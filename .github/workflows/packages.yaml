@@ -20,6 +20,7 @@ permissions:
 jobs:
   postgres:
     strategy:
+      fail-fast: false
       matrix:
         versions: [14, 15, 16]
     runs-on: ubuntu-latest
