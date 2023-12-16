@@ -17,12 +17,16 @@ permissions:
   packages: write
   contents: read
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/cdpgvecto.rs
+
 jobs:
   postgres:
     strategy:
       fail-fast: false
       matrix:
-        versions: [14, 15, 16]
+        versions: [ 14, 15, 16 ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
