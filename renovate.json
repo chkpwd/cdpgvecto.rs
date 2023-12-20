@@ -14,12 +14,11 @@
       ]
     },
     {
+      "description": "Process RedHat Images in Github Action",
       "fileMatch": ["^\\.github/workflows/.*\\.yml$"],
       "matchStrings": [
         "versions:\\s*\\[\\s*\"(?<depName>crunchydata/crunchy-postgres):ubi8-(?<currentValue>\\d+\\.\\d+-\\d+)\""
-      ],
-      "datasource": "docker",
-      "versioning": "loose"
+      ]
     }
   ],
   "packageRules": []
