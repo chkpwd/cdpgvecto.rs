@@ -8,13 +8,14 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Process Dockerfile(s)",
       "fileMatch": ["^Dockerfile$"],
+      "description": "Process Dockerfile(s)",
       "matchStrings": [
         "datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s(?:ENV|ARG) .+?_TAG[ =]\"?(?<currentValue>.+?)\"?\\s"
       ]
     },
     {
+      "customType": "regex",
       "fileMatch": ["^\\.github/workflows/.*\\.yml$"],
       "description": "Process CrunchyData Postgres Images in GitHub Actions",
       "matchStrings": [
