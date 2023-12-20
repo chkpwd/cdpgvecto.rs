@@ -26,7 +26,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        versions: [ 14, 15, 16 ]
+        versions: 
+          - "ubi8-14.10-0"
+          - "ubi8-15.5-0"
+          - "ubi8-16.1-0"
+    
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +65,9 @@ jobs:
       - name: Set Postgres Version
         id: version
         run: |
-          PG_MAJOR=$(echo ${{ matrix.versions }})
+          CRUNCHY_VERSION=${{ matrix.versions }}
+          PG_VERSION=${CRUNCHY_VERSION#ubi8-}
+          PG_MAJOR=${PG_VERSION%.*}
           echo "PG_MAJOR=$PG_MAJOR" >> "$GITHUB_OUTPUT"
 
       - name: Extract PGVECTORS_TAG from Dockerfile
@@ -94,4 +100,5 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
           build-args: |
-            PG_MAJOR=${{ matrix.versions }}
+            PG_MAJOR=${{ steps.version.outputs.PG_MAJOR }}
+            CRUNCHYDATA_VERSION=${{ matrix.versions }}
