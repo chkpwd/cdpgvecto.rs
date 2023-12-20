@@ -5,13 +5,21 @@
   ],
   "automerge": true,
   "rebaseWhen": "conflicted",
-  "customManagers": [
+  "regexManagers": [
     {
-      "customType": "regex",
+      "description": "Process Dockerfile(s) in Docker Directory",
       "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.*?\"(?<currentValue>.*)\"\\n"
+        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s(?:ENV|ARG) .+?_VERSION[ =]\"?(?<currentValue>.+?)\"?\\s"
       ]
+    },
+    {
+      "fileMatch": ["^\\.github/workflows/.*\\.yml$"],
+      "matchStrings": [
+        "versions:\\s*\\[\\s*\"(?<depName>crunchydata/crunchy-postgres):ubi8-(?<currentValue>\\d+\\.\\d+-\\d+)\""
+      ],
+      "datasource": "docker",
+      "versioning": "loose"
     }
   ],
   "packageRules": []
