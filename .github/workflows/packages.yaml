@@ -27,8 +27,11 @@ jobs:
       fail-fast: false
       matrix:
         versions:
+          # renovate: datasource=docker depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres
           - "ubi8-14.10-0"
+          # renovate: datasource=docker depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres
           - "ubi8-15.5-0"
+          # renovate: datasource=docker depName=registry.developers.crunchydata.com/crunchydata/crunchy-postgres
           - "ubi8-16.1-0"
     
     runs-on: ubuntu-latest

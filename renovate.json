@@ -5,19 +5,20 @@
   ],
   "automerge": true,
   "rebaseWhen": "conflicted",
-  "regexManagers": [
+  "customManagers": [
     {
-      "description": "Process Dockerfile(s) in Docker Directory",
+      "customType": "regex",
+      "description": "Process Dockerfile(s)",
       "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s(?:ENV|ARG) .+?_VERSION[ =]\"?(?<currentValue>.+?)\"?\\s"
+        "datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s(?:ENV|ARG) .+?_TAG[ =]\"?(?<currentValue>.+?)\"?\\s"
       ]
     },
     {
-      "description": "Process RedHat Images in Github Action",
       "fileMatch": ["^\\.github/workflows/.*\\.yml$"],
+      "description": "Process CrunchyData Postgres Images in GitHub Actions",
       "matchStrings": [
-        "versions:\\s*\\[\\s*\"(?<depName>crunchydata/crunchy-postgres):ubi8-(?<currentValue>\\d+\\.\\d+-\\d+)\""
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.*?\"(?<currentValue>.*)\"\\n"
       ]
     }
   ],
