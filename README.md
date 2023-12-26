@@ -21,9 +21,9 @@ spec:
           shared_preload_libraries: "vectors.so"
 ```
 
-> :warning: If you want to do a major Posgres version upgrade like described in the [official doc](https://access.crunchydata.com/documentation/postgres-operator/latest/guides/major-postgres-version-upgrade), make sure you do the following steps or the upgrade will fail:
+> :warning: If you want to do a major Postgres version upgrade like described in the [official docs](https://access.crunchydata.com/documentation/postgres-operator/latest/guides/major-postgres-version-upgrade), make sure you do the following steps or the upgrade will fail:
 
 1. Connect to the database where you have enabled the `vectors` extension and disable it with `DROP EXTENSION vectors;`.
 2. Remove the `dynamicConfiguration` block you added to `PostgresCluster` from above.
 3. Follow the upgrade instruction from the official doc.
-4. Add back the removed block and enable the extension in the database again with `CREATE EXTENSION vectors;`
+4. Add back the `dynamicConfiguration` block and enable the extension in the database again with `CREATE EXTENSION vectors;`
