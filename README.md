@@ -6,7 +6,7 @@ This repository contains container images for [CrunchyData PGO](https://github.c
 
 > :warning: **If you are deploying this image on an existing database:** The postgres configuration must be updated to enable the pgvecto.rs extension. 
 
-To enable the extension, you need to set the `shared_preload_libraries` in your Cluster spec. Add the following configuration to your `PostgresCluster` yaml file:
+To enable the extension, you need to set the `shared_preload_libraries` and `search_path` in your Cluster spec. Add the following configuration to your `PostgresCluster` yaml file:
 
 ```yaml
 apiVersion: postgres-operator.crunchydata.com/v1beta1
@@ -19,6 +19,7 @@ spec:
         synchronous_commit: "on"
         parameters:
           shared_preload_libraries: "vectors.so"
+          search_path: '"$user", public, vectors'
 ```
 
 > :warning: If you want to do a major Postgres version upgrade like described in the [official docs](https://access.crunchydata.com/documentation/postgres-operator/latest/guides/major-postgres-version-upgrade), make sure you do the following steps or the upgrade will fail:
