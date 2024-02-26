@@ -55,7 +55,10 @@ jobs:
         id: changed-version
         uses: tj-actions/changed-files@v40
         with:
-          files: Dockerfile
+          files: |
+            Dockerfile
+            .github/workflows/packages.yaml
+            app/pgvectors.sql
 
       - name: Determine image push
         uses: actions/github-script@v7
