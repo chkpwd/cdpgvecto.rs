@@ -4,14 +4,14 @@ ARG PG_MAJOR
 
 FROM alpine:${ALPINE_VERSION} as builder
 
-RUN apk add --no-cache curl alien rpm binutils
+RUN apk add --no-cache curl alien rpm binutils xz
 
 WORKDIR /tmp
 
 ARG PG_MAJOR
 ARG TARGETARCH
 # renovate: datasource=github-releases depName=tensorchord/pgvecto.rs
-ARG PGVECTORS_TAG=v0.2.0
+ARG PGVECTORS_TAG=v0.3.0
 
 RUN curl --fail -o pgvectors.deb -sSL https://github.com/tensorchord/pgvecto.rs/releases/download/${PGVECTORS_TAG}/vectors-pg${PG_MAJOR}_${PGVECTORS_TAG:1}_${TARGETARCH}.deb && \
     alien -r pgvectors.deb && \
