@@ -51,7 +51,7 @@ jobs:
 
       - name: Determine version change
         id: changed-version
-        uses: tj-actions/changed-files@v40
+        uses: tj-actions/changed-files@v45
         with:
           files: |
             Dockerfile
