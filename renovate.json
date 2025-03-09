@@ -1,14 +1,16 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "automerge": false,
   "rebaseWhen": "conflicted",
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "fileMatch": [
+        "^Dockerfile$"
+      ],
       "description": "Process Dockerfile(s)",
       "matchStrings": [
         "datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s(?:ENV|ARG) .+?_TAG[ =]\"?(?<currentValue>.+?)\"?\\s"
@@ -16,7 +18,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["^\\.github/workflows/.*\\.yml$"],
+      "fileMatch": [
+        "^\\.github/workflows/.*\\.yml$"
+      ],
       "description": "Process CrunchyData Postgres Images in GitHub Actions",
       "matchStrings": [
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.*?\"(?<currentValue>.*)\"\\n"
